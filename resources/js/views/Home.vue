@@ -1,11 +1,14 @@
 <template>
-  <div>
-    Home
+  <div class="p-4">
+    
   </div>
 </template>
 
 <script>
+
 export default {
-  
+  components: {
+    
+  }
 }
 </script>

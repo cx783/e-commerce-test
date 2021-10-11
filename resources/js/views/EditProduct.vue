@@ -2,6 +2,22 @@
   <div class="p-4 md:mt-12">
     <div class="bg-white rounded-lg p-6 lg:w-2/3 lg:mx-auto" v-if="product">
       <p class="text-xl text-gray-700 pb-4 mb-4 border-b border-gray-300">Edit product</p>
+      <div
+        class="mb-4"
+      >
+        <p class="mb-4 text-base text-gray-800">Images</p>
+        <div class="flex flex-wrap space-x-2 mb-2">
+          <img v-for="image in product.images"
+            :key="`img_${image.id}`"
+            :src="image.url"
+            class="w-32 h-24 rounded overflow-hidden"
+          />
+        </div>
+        <uploader 
+          :url="`/api/products/${product.id}/media`"
+          @uploaded="refresh"
+        ></uploader>
+      </div>
       <product-form
         :disabled="saving"
         :initialValues="{
@@ -24,6 +40,7 @@
 <script>
 import axios from 'axios'
 import ProductForm from '../components/ProductForm.vue'
+import Uploader from './../components/Uploader.vue'
 
 export default {
   data() {
@@ -33,11 +50,11 @@ export default {
     }
   },
   components: {
-    ProductForm
+    ProductForm,
+    Uploader
   },
   async mounted() {
-    let response = await axios.get(`/api/products/${this.$route.params.id}`)
-    this.product = response.data
+    this.refresh()
   },
   methods: {
     cancel() {
@@ -60,6 +77,10 @@ export default {
       } finally {
         this.saving = false
       }
+    },
+    async refresh() {
+      let response = await axios.get(`/api/products/${this.$route.params.id}`)
+      this.product = response.data
     }
   }
 }

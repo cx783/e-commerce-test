@@ -3,14 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Support\Str;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Product extends Model
+class Product extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, InteractsWithMedia;
 
     protected $fillable = [
         'name',
@@ -38,5 +41,15 @@ class Product extends Model
             ->when($filters['trashed'] ?? null, function (Builder $query) {
                 return $query->withTrashed()->whereNotNull('deleted_at');
             });
+    }
+
+    public function getImagesAttribute()
+    {
+        return $this->loadMedia('default')->map(function (Media $media) {
+            return [
+                'id' => $media->id,
+                'url' => $media->getFullUrl()
+            ];
+        });
     }
 }

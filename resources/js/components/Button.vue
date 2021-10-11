@@ -27,6 +27,10 @@ export default {
   },
   computed: {
     bg() {
+      if (this.color === 'white') {
+        return 'bg-white'
+      }
+
       return `bg-${this.color}-600`
     },
     sizeClass() {

@@ -22,5 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::resource('users', UserController::class)->middleware('auth:sanctum');
+Route::post('/products/{product}/media', [ProductController::class, 'media']);
+Route::delete('/product/{product}/media/{media}/', [ProductController::class, 'destroyMedia']); // By simplicity the method for media is implemented in the product controller, could have its proper controller
 Route::resource('products', ProductController::class);
 Route::post('/checkout', CheckoutController::class);

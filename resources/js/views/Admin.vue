@@ -1,6 +1,6 @@
 <template>
-  <div class="w-screen h-screen flex bg-gray-200">
-    <div class="flex flex-col absolute z-10 left-0 top-0 transition-transform transform bg-gray-800 w-72 h-full flex-shrink-0 md:-translate-x-0 md:relative"
+  <div class="w-screen h-full flex bg-gray-200">
+    <div class="flex flex-col absolute z-10 left-0 top-0 transition-transform transform bg-gray-800 w-72 h-full flex-shrink-0 md:-translate-x-0 md:fixed"
       :class="{
         '-translate-x-72': ! showMenu,
         '-translate-x-0': showMenu
@@ -74,7 +74,7 @@
         <span class="text-sm">Logout</span>
       </a>
     </div>
-    <div class="h-screen flex flex-col flex-grow transform">
+    <div class="h-screen flex flex-col flex-grow transform md:pl-72">
       <div class="w-full md:hidden bg-white px-4 py-2">
         <svg @click="toggleMenu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">

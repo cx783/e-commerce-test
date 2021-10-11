@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div class="p-4 bg-gray-200">
     <div class="flex justify-between space-x-2 bg-white p-4 rounded">
       <div class="flex-grow">
         <form-input id="name" placeholder="Search by name" v-model="productName"></form-input>
@@ -9,7 +9,7 @@
         </label>
       </div>
       <form-button
-        @click="applyFilters"
+        @click="applyFiltersButtonClicked"
       >
         Apply filters
       </form-button>
@@ -89,6 +89,13 @@
             <div v-else class="w-full"></div>
           </div>
         </div>
+        <div class="w-full">
+          <pagination
+            :total="total"
+            :current-page="currentPage"
+            @goTo="goTo"
+          ></pagination>
+        </div>
       </div>
     </div>
   </div>
@@ -99,6 +106,7 @@ import axios from 'axios'
 import FormButton from './../components/Button.vue'
 import FormInput from './../components/Input.vue'
 import ConfirmableButton from './../components/ConfirmableButton.vue'
+import Pagination from './../components/Pagination.vue'
 
 export default {
   data() {
@@ -107,13 +115,17 @@ export default {
       productName: '',
       onlyTrashed: false,
       loadingProducts: false,
-      deleting: []
+      deleting: [],
+
+      total: 0,
+      currentPage: 1
     }
   },
   components: {
     FormButton,
     FormInput,
-    ConfirmableButton
+    ConfirmableButton,
+    Pagination
   },
   mounted() {
     this.getProducts()
@@ -124,9 +136,15 @@ export default {
 
       try {
         const { data } = await axios.get('/api/products', {
-          params: filters
+          params: {
+            ...filters,
+            page: this.currentPage
+          }
         })
+
         this.products = data.data
+        this.total = data.total
+        this.currentPage = data.current_page
       } catch (err) {
 
       } finally {
@@ -135,6 +153,10 @@ export default {
     },
     addNewProduct() {
       this.$router.push('/admin/products/create')
+    },
+    applyFiltersButtonClicked() {
+      this.currentPage = 1
+      this.applyFiltersButtonClicked
     },
     applyFilters() {
       let filters = {
@@ -161,6 +183,10 @@ export default {
       } finally {
         this.deleting = this.deleting.filter(p => p.id !== product.id)
       }
+    },
+    goTo(position) {
+      this.currentPage = position
+      this.applyFilters()
     }
   }
 }

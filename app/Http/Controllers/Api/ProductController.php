@@ -27,6 +27,8 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $product->setAppends(['images']);
+
         return response()->json(
             $product
         );
@@ -56,6 +58,20 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
+
+        return response()->json([], 204);
+    }
+
+    public function media(Product $product)
+    {
+        $product->addMedia($this->request->file)->toMediaCollection();
+
+        return response()->json([], 201);
+    }
+
+    public function destroyMedia(Product $product, $media)
+    {
+        $product->deleteMedia($media);
 
         return response()->json([], 204);
     }
