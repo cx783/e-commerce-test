@@ -97,4 +97,31 @@ class ProductManagementTest extends TestCase
         $this->assertDatabaseCount('products', 1);
         $this->assertDatabaseHas('products', $toUpdate);
     }
+
+    public function test_guest_users_can_not_delete_products()
+    {
+        $products = Product::factory()->count(2)->create();
+
+        $this->deleteJson("/api/products/{$products->first()->id}")
+            ->assertStatus(401);
+
+        $this->assertDatabaseCount('products', 2);
+    }
+
+    public function test_logged_in_users_can_delete_products()
+    {
+        $product = Product::factory()->create();
+
+        /** @var \Illuminate\Contracts\Auth\Authenticatable $user */
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $this->deleteJson("/api/products/{$product->id}")
+            ->assertStatus(204);
+
+        $this->assertSoftDeleted('products', [
+            'id' => $product->id
+        ]);
+    }
 }

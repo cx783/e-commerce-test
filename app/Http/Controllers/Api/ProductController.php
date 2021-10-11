@@ -19,7 +19,8 @@ class ProductController extends Controller
     public function index()
     {
         return response()->json(
-            Product::paginate($this->request->get('per_page', 15)),
+            Product::filter($this->request->only('name', 'trashed'))
+                ->paginate($this->request->get('per_page', 15)),
             200
         );
     }
@@ -50,6 +51,13 @@ class ProductController extends Controller
         $product->update($validated);
 
         return response()->json($product);
+    }
+
+    public function destroy(Product $product)
+    {
+        $product->delete();
+
+        return response()->json([], 204);
     }
 
     private function validateRequest()

@@ -49,6 +49,34 @@ class UserManagementTest extends TestCase
         $this->assertDatabaseCount('users', 0);
     }
 
+    public function test_guest_users_can_not_see_one_user()
+    {
+        $users = User::factory()->count(2)->create();
+
+        $response = $this->getJson("/api/users/{$users->last()->id}");
+
+        $response->assertStatus(401);
+    }
+
+    public function test_logged_in_users_can_see_one_user()
+    {
+        $users = User::factory()->count(2)->create();
+
+        /** @var \Illuminate\Contracts\Auth\Authenticatable $user */
+        $user = $users->first();
+
+        $this->actingAs($user);
+
+        $response = $this->getJson("/api/users/{$users->last()->id}");
+
+        $response->assertStatus(200)
+            ->assertJsonFragment([
+                'name' => $users->last()->name,
+                'email' => $users->last()->email,
+                'created_at' => $users->last()->created_at,
+            ]);
+    }
+
     public function test_logged_in_users_can_create_users()
     {
         /** @var \Illuminate\Contracts\Auth\Authenticatable $user */
@@ -67,6 +95,45 @@ class UserManagementTest extends TestCase
         $this->assertDatabaseCount('users', 2);
         $this->assertDatabaseHas('users', [
             'email' => 'user1@mail.com'
+        ]);
+    }
+
+    public function test_guest_users_can_not_update_user()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->putJson("/api/users/{$user->id}", [
+            "name" => "Updated name",
+            "email" => "updated@mail.com"
+        ]);
+
+        $response->assertStatus(401);
+        $this->assertDatabaseMissing('users', [
+            "name" => "Updated name",
+            "email" => "updated@mail.com"
+        ]);
+    }
+
+    public function test_logged_in_users_can_update_user()
+    {
+        // $this->withExceptionHandling();
+
+        $users = User::factory()->count(2)->create();
+
+        /** @var \Illuminate\Contracts\Auth\Authenticatable $user */
+        $user = $users->first();
+
+        $this->actingAs($user);
+
+        $response = $this->putJson("/api/users/{$users->last()->id}", [
+            "name" => "Updated name",
+            "email" => "updated@mail.com"
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('users', [
+            "name" => "Updated name",
+            "email" => "updated@mail.com"
         ]);
     }
 
