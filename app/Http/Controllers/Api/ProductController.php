@@ -18,10 +18,14 @@ class ProductController extends Controller
 
     public function index()
     {
+        $products = Product::filter($this->request->only('name', 'trashed'))
+            ->orderByDesc('created_at')
+            ->paginate($this->request->get('per_page', 15));
+
+        $products->append('images');
+
         return response()->json(
-            Product::filter($this->request->only('name', 'trashed'))
-                ->orderByDesc('created_at')
-                ->paginate($this->request->get('per_page', 15)),
+            $products,
             200
         );
     }
