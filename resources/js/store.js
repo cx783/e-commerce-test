@@ -1,11 +1,24 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
 
 import axios from 'axios'
 
+import cart from './modules/cart'
+
 Vue.use(Vuex)
 
+// Save the state in local storage for persist between page reloads
+const  dataState = createPersistedState({
+  key: 'ec-cart',
+  paths: ['cart.items']
+})
+
 const store = new Vuex.Store({
+  modules: {
+    cart
+  },
+  plugins: [dataState],
   state: {
     verifiedAuthentication: false,
     isAuthenticating: false,

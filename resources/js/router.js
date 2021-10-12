@@ -14,6 +14,7 @@ import AdminProducts from './views/AdminProducts.vue'
 import EditUser from './views/EditUser.vue'
 import CreateProduct from './views/CreateProduct.vue'
 import EditProduct from './views/EditProduct.vue'
+import Checkout from'./views/Checkout.vue'
 
 Vue.use(Router)
 
@@ -21,6 +22,10 @@ const routes = [
   {
     path: '/',
     component: Home
+  },
+  {
+    path: '/checkout',
+    component: Checkout
   },
   {
     path: '/login',

@@ -20,7 +20,7 @@
           <h3 class="text-blue-700 text-xl font-semibold text-center truncate">{{ product.name }}</h3>
           <p class="text-gray-800 text-2xl text-center">$ {{ product.price }}</p>
           <div class="flex justify-end space-x-2">
-            <form-button color="blue" class="w-full">
+            <form-button color="blue" class="w-full" @click="addItem({ product })">
               Add to cart
             </form-button>
             <form-button color="gray" class="w-full">
@@ -41,6 +41,7 @@ import ClientHeader from './../components/ClientHeader.vue'
 import FormButton from './../components/Button.vue'
 import Pagination from './../components/Pagination.vue'
 import axios from 'axios'
+import { mapMutations } from 'vuex'
 
 export default {
   data() {
@@ -58,6 +59,9 @@ export default {
     this.loadProducts()
   },
   methods: {
+    ...mapMutations('cart', [
+      'addItem'
+    ]),
     async loadProducts() {
       this.loading = true
 
