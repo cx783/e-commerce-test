@@ -4,6 +4,7 @@
       <p class="text-xl text-gray-700 pb-4 mb-4 border-b border-gray-300">Add new user</p>
       <user-form
         :disabled="saving"
+        :loading="saving"
         @cancel="cancel"
         @save="save"
       ></user-form>

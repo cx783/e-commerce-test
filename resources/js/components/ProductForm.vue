@@ -29,7 +29,8 @@
         :disabled="disabled"
         @click="save"
       >
-        Guardar
+        <loader color="blue-100" v-if="loading"></loader>
+        <span>Guardar</span>
       </form-button>
       <form-button class="w-full mt-4 lg:mt-0 lg:w-auto inline-block disabled:opacity-75"
         color="red"
@@ -60,6 +61,10 @@ export default {
         price: 0,
         status: true
       })
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

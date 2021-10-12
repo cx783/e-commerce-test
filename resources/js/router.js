@@ -46,11 +46,17 @@ const routes = [
       },
       {
         path: 'users/create',
-        component: CreateUser
+        component: CreateUser,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'users/:id/edit',
-        component: EditUser
+        component: EditUser,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'products',
@@ -61,11 +67,17 @@ const routes = [
       },
       {
         path: 'products/create',
-        component: CreateProduct
+        component: CreateProduct,
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'products/:id/edit',
-        component: EditProduct
+        component: EditProduct,
+        meta: {
+          requiresAuth: true
+        }
       },
     ],
     meta: {
@@ -79,13 +91,18 @@ const router = new Router({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   console.log(store.getters.isAuthenticated)
-  if (to.meta?.requiresAuth && ! store.getters.isAuthenticated) {
-    next('/login')
-  } else {
-    next()
+  if (to.meta?.requiresAuth) {
+    console.log('store.verifiedAuthentication', store.state.verifiedAuthentication)
+    if (! store.state.verifiedAuthentication) {
+      await store.dispatch('verifyAuthentication')
+    }
+    if (! store.getters.isAuthenticated)
+      return next('/login')
   }
+
+  return next()
 })
 
 axios.interceptors.response.use(

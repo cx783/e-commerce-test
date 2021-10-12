@@ -19,6 +19,7 @@ class UserController extends Controller
     {
         return response()->json(
             User::filter($this->request->only(['name', 'trashed']))
+                ->orderByDesc('created_at')
                 ->paginate($this->request->get('per_page', 15))
         );
     }

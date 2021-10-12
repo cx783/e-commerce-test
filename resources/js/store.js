@@ -7,25 +7,35 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    verifiedAuthentication: false,
     isAuthenticating: false,
+    isLogout: false,
     user: null,
   },
   getters: {
     isAuthenticated(state) {
-      // TODO: hardcoded for developement
-      return true
-      // return state.user !== null
+      return state.user !== null
     }
   },
   mutations: {
+    setVerifiedAuthentication(state, value) {
+      state.verifiedAuthentication = value
+    },
     setAuthenticating(state, value) {
       state.isAuthenticating = value
+    },
+    setIsLogout(state, value) {
+      state.isLogout = value
     },
     setUser(state, user) {
       state.user = user
     }
   },
   actions: {
+    async verifyAuthentication({ commit, dispatch }) {
+      await dispatch('getUser')
+      commit('setVerifiedAuthentication', true)
+    },
     async getUser({ commit }) {
       try {
         const { data } = await axios.get('/api/user');
@@ -49,14 +59,20 @@ const store = new Vuex.Store({
         console.log(err)
         throw err
       } finally {
+        commit('setVerifiedAuthentication', true)
         commit('setAuthenticating', false)
       }
     },
-    async logout() {
+    async logout({ commit }) {
       try {
+        commit('setIsLogout', true)
         await axios.post('/logout')
         setUser(null)
       } catch (err) { }
+      finally {
+        commit('setIsLogout', false)
+        commit('setVerifiedAuthentication', false)
+      }
     }
   }
 })

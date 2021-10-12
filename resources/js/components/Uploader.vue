@@ -33,7 +33,8 @@
       color="green"
       @click="confirm"
     >
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+      <loader v-if="uploading" color="green-100"></loader>
+      <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
       <span>Confirm</span>
     </form-button>
   </div>
@@ -58,7 +59,8 @@ export default {
     return {
       files: [],
       uploaded: [],
-      failed: []
+      failed: [],
+      uploading: false
     }
   },
   components: {
@@ -85,6 +87,7 @@ export default {
     },
     // Warning: this method can be called from parent with ref
     async confirm() {
+      this.uploading = true
       let calls = []
 
       for (let i = 0; i < this.files.length; i++) {
@@ -112,6 +115,7 @@ export default {
         }, 1500)
 
       }).finally(() => {
+        this.uploading = false
         this.$emit('uploaded')
       })
     }

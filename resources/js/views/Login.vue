@@ -28,9 +28,12 @@
           />
          </div>
          <button type="submit"
-          class="w-full block bg-blue-600 px-4 py-2 text-center text-blue-50 rounded mt-6"
+          class="w-full flex items-center justify-center bg-blue-600 px-4 py-2 text-center text-blue-50 rounded mt-6 disabled:opacity-75"
           :disabled="isAuthenticating"
-         >Entrar</button>
+         >
+          <loader color="white" v-if="isAuthenticating"></loader>
+          <span>Entrar</span>
+        </button>
        </form>
      </div>
    </div>
@@ -44,7 +47,8 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      isLogin: true,
     }
   },
   computed: {
@@ -53,11 +57,13 @@ export default {
   methods: {
     async login() {
       try {
+        this.isLogin = true
         await this.$store.dispatch('login', {
           email: this.email,
           password: this.password
         })
 
+        this.isLogin = false
         return this.$router.replace('/admin')
       } catch (err) {
 

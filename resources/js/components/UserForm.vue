@@ -25,13 +25,14 @@
       <form-input v-model="password_confirmation" type="password" class="w-full" id="password" placeholder="******"></form-input>
     </div>
     <div class="mt-4 lg:text-right">
-      <form-button class="w-full lg:w-auto inline-block  disabled:opacity-75"
+      <form-button class="w-full lg:w-auto inline-block"
         :disabled="disabled"
         @click="save"
       >
-        Guardar
+        <loader color="blue-100" v-if="loading"></loader>
+        <span>Guardar</span>
       </form-button>
-      <form-button class="w-full mt-4 lg:mt-0 lg:w-auto inline-block disabled:opacity-75"
+      <form-button class="w-full mt-4 lg:mt-0 lg:w-auto inline-block"
         color="red"
         :disabled="disabled"
         @click="cancel"
@@ -67,6 +68,10 @@ export default {
     initialValues: {
       type: Object,
       default: () => ({name: '', email: ''})
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

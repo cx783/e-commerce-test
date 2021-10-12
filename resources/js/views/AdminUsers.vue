@@ -83,7 +83,8 @@
                 @confirmed="deleteUser(user)"
                 :disabled="deleting.includes(user.id)"
               >
-                Delete
+                <loader color="red-100" v-if="deleting.includes(user.id)"></loader>
+                <span>Delete</span>
               </confirmable-button>
             </div>
             <div v-else class="w-full"></div>
@@ -171,7 +172,7 @@ export default {
     },
     applyFiltersButtonClicked() {
       this.currentPage = 1
-      this.applyFiltersButtonClicked
+      this.applyFilters()
     },
     applyFilters() {
       let filters = {

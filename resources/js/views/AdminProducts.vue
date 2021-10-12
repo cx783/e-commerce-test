@@ -83,7 +83,8 @@
                 @confirmed="deleteProduct(product)"
                 :disabled="deleting.includes(product.id)"
               >
-                Delete
+                <loader color="red-100" v-if="deleting.includes(product.id)"></loader>
+                <span>Delete</span>
               </confirmable-button>
             </div>
             <div v-else class="w-full"></div>
@@ -156,7 +157,7 @@ export default {
     },
     applyFiltersButtonClicked() {
       this.currentPage = 1
-      this.applyFiltersButtonClicked
+      this.applyFilters()
     },
     applyFilters() {
       let filters = {

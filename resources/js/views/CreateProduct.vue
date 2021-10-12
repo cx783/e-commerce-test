@@ -13,6 +13,7 @@
       </div>
       <product-form
         :disabled="saving"
+        :loading="saving"
         @cancel="cancel"
         @save="save"
       ></product-form>

@@ -7,11 +7,24 @@
       >
         <p class="mb-4 text-base text-gray-800">Images</p>
         <div class="flex flex-wrap space-x-2 mb-2">
-          <img v-for="image in product.images"
+          <div 
+            v-for="image in product.images"
             :key="`img_${image.id}`"
-            :src="image.url"
-            class="w-32 h-24 rounded overflow-hidden"
-          />
+            class="flex flex-col items-center"
+          >
+            <img
+              :src="image.url"
+              class="w-32 h-24 rounded overflow-hidden"
+            />
+            <confirmable-button
+              text="Delete"
+              size="sm"
+              class="mt-2"
+              color="red"
+              @confirmed="remove(image)"
+              :disabled="imagesRemoving.includes(image.id)"
+            ></confirmable-button>
+          </div>
         </div>
         <uploader 
           :url="`/api/products/${product.id}/media`"
@@ -20,6 +33,7 @@
       </div>
       <product-form
         :disabled="saving"
+        :loading="saving"
         :initialValues="{
           name: product.name,
           description: product.description,
@@ -41,17 +55,20 @@
 import axios from 'axios'
 import ProductForm from '../components/ProductForm.vue'
 import Uploader from './../components/Uploader.vue'
+import ConfirmableButton from './../components/ConfirmableButton.vue'
 
 export default {
   data() {
     return {
       saving: false,
-      product: null
+      product: null,
+      imagesRemoving: []
     }
   },
   components: {
     ProductForm,
-    Uploader
+    Uploader,
+    ConfirmableButton
   },
   async mounted() {
     this.refresh()
@@ -81,6 +98,11 @@ export default {
     async refresh() {
       let response = await axios.get(`/api/products/${this.$route.params.id}`)
       this.product = response.data
+    },
+    async remove(image) {
+      this.imagesRemoving.push(image.id)
+      await axios.delete(`/api/products/${this.product.id}/media/${image.id}`)
+      this.refresh();
     }
   }
 }

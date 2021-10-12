@@ -1,8 +1,9 @@
 <template>
   <button
-    class="rounded-lg text-white"
+    class="rounded text-white disabled:opacity-75 inline-flex justify-center items-center"
     :class="[bg, sizeClass]"
     :type="type"
+    :disabled="disabled"
     @click="$emit('click')"
   >
     <slot></slot>
@@ -23,6 +24,10 @@ export default {
     size: {
       type: String,
       default: 'md'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
