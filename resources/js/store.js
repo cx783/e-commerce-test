@@ -24,6 +24,7 @@ const store = new Vuex.Store({
     isAuthenticating: false,
     isLogout: false,
     user: null,
+    errorMessages: []
   },
   getters: {
     isAuthenticated(state) {
@@ -42,6 +43,9 @@ const store = new Vuex.Store({
     },
     setUser(state, user) {
       state.user = user
+    },
+    setErrorMessages(state, messages) {
+      state.errorMessages = messages
     }
   },
   actions: {

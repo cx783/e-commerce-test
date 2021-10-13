@@ -12,7 +12,7 @@ class ProductController extends Controller
 
     public function __construct(Request $request)
     {
-        $this->middleware('auth:sanctum')->except('index', 'show');
+        $this->middleware('auth:sanctum')->except('index', 'show', 'showBySlug');
         $this->request = $request;
     }
 
@@ -37,6 +37,15 @@ class ProductController extends Controller
         return response()->json(
             $product
         );
+    }
+
+    public function showBySlug(string $slug)
+    {
+        $product = Product::where('slug', $slug)->firstOrFail();
+
+        $product->setAppends(['images']);
+        
+        return response()->json($product);
     }
 
     public function store()

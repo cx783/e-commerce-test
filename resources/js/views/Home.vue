@@ -6,7 +6,7 @@
       class="container mx-auto mt-4"
     >
       <div class="mt-4">
-        <pagination :total="60"></pagination>
+        <pagination :total="total" :current-page="currentPage" @goTo="goTo"></pagination>
       </div>
       <div class="mt-4 grid gap-6 grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2">
         <div v-for="product in products"
@@ -23,14 +23,14 @@
             <form-button color="blue" class="w-full" @click="addItem({ product })">
               Add to cart
             </form-button>
-            <form-button color="gray" class="w-full">
+            <form-button color="gray" class="w-full" @click="goToDetails(product)">
               Show details
             </form-button>
           </div>
         </div>
       </div>
       <div class="py-4">
-        <pagination :total="60"></pagination>
+        <pagination :total="total" :current-page="currentPage" @goTo="goTo"></pagination>
       </div>
     </div>
   </div>
@@ -47,6 +47,8 @@ export default {
   data() {
     return {
       products: [],
+      total: 0,
+      currentPage: 1,
       loading: false
     }
   },
@@ -65,10 +67,23 @@ export default {
     async loadProducts() {
       this.loading = true
 
-      let { data } = await axios.get('/api/products')
+      let { data } = await axios.get('/api/products', {
+        params: {
+          page: this.currentPage
+        }
+      })
       this.products = data.data
+      this.total = data.total
+      this.currentPage = data.current_page
 
       this.loading = false
+    },
+    goTo(position) {
+      this.currentPage = position
+      this.loadProducts()
+    },
+    goToDetails(product) {
+      this.$router.push(product.slug)
     }
   }
 }

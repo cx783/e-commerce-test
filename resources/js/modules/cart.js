@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export default {
   namespaced: true,
   state: {
@@ -9,7 +11,9 @@ export default {
         image: '',
         price: 1
       }
-    }*/]
+    }*/],
+    saving: false,
+    saved: false
   },
   getters:{
     totalItems(state) {
@@ -39,6 +43,40 @@ export default {
     },
     removeItem(state, productId) {
       state.items = state.items.filter(i => i.product.id !== productId)
-    } 
+    },
+    clean(state) {
+      state.items = []
+    },
+    startSaving(state) {
+      state.saving = true
+    },
+    endSaving(state) {
+      state.saving = false
+      state.saved = true
+    },
+    savingFailed(state) {
+      state.saved = false
+      state.saving = false
+    }
+  },
+  actions: {
+    async save({ state, commit }, data) {
+      const body = {
+        ...data,
+        items: state.items.map(item => ({
+          product_id: item.product.id,
+          quantity: item.quantity,
+          price: item.product.price
+        }))
+      }
+      commit('startSaving')
+      try {
+        await axios.post('/api/checkout', body)
+        commit('clean')
+        commit('endSaving')
+      } catch (err) {
+        commit('savingFailed')
+      } 
+    }
   }
 }
