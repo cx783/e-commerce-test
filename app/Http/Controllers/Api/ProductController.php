@@ -12,16 +12,20 @@ class ProductController extends Controller
 
     public function __construct(Request $request)
     {
-        $this->middleware('auth:sanctum')->except('index', 'show');
+        $this->middleware('auth:sanctum')->except('index', 'show', 'showBySlug');
         $this->request = $request;
     }
 
     public function index()
     {
+        $products = Product::filter($this->request->only('name', 'trashed'))
+            ->orderByDesc('created_at')
+            ->paginate($this->request->get('per_page', 15));
+
+        $products->append('images');
+
         return response()->json(
-            Product::filter($this->request->only('name', 'trashed'))
-                ->orderByDesc('created_at')
-                ->paginate($this->request->get('per_page', 15)),
+            $products,
             200
         );
     }
@@ -33,6 +37,15 @@ class ProductController extends Controller
         return response()->json(
             $product
         );
+    }
+
+    public function showBySlug(string $slug)
+    {
+        $product = Product::where('slug', $slug)->firstOrFail();
+
+        $product->setAppends(['images']);
+        
+        return response()->json($product);
     }
 
     public function store()

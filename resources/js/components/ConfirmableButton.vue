@@ -24,6 +24,7 @@
         :size="size"
         :disabled="disabled"
         @click="shouldConfirm = true"
+        :class="buttonClass"
       >
         <slot>{{ text }}</slot>
       </form-button>
@@ -67,6 +68,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    buttonClass: {
+      type: [String, Array],
+      default: ''
     }
   },
   data() {

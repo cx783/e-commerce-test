@@ -1,6 +1,6 @@
 <template>
   <button
-    class="rounded text-white disabled:opacity-75 inline-flex justify-center items-center"
+    class="btn"
     :class="[bg, sizeClass]"
     :type="type"
     :disabled="disabled"
@@ -32,21 +32,10 @@ export default {
   },
   computed: {
     bg() {
-      if (this.color === 'white') {
-        return 'bg-white'
-      }
-
-      return `bg-${this.color}-600`
+      return `btn-${this.color}`
     },
     sizeClass() {
-      switch (this.size) {
-        case 'sm':
-          return 'text-sm py-1 px-2'
-        case 'lg':
-          return 'text-lg px-6 py-4'
-        default:
-          return 'text-base px-4 py-2'
-      }
+      return `btn-${this.size}`
     }
   }
 }

@@ -14,6 +14,8 @@ import AdminProducts from './views/AdminProducts.vue'
 import EditUser from './views/EditUser.vue'
 import CreateProduct from './views/CreateProduct.vue'
 import EditProduct from './views/EditProduct.vue'
+import Checkout from'./views/Checkout.vue'
+import ProductDetail from './views/ProductDetail.vue'
 
 Vue.use(Router)
 
@@ -21,6 +23,10 @@ const routes = [
   {
     path: '/',
     component: Home
+  },
+  {
+    path: '/checkout',
+    component: Checkout
   },
   {
     path: '/login',
@@ -83,6 +89,10 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/:slug',
+    component: ProductDetail
   }
 ]
 
@@ -94,7 +104,6 @@ const router = new Router({
 router.beforeEach(async (to, from, next) => {
   console.log(store.getters.isAuthenticated)
   if (to.meta?.requiresAuth) {
-    console.log('store.verifiedAuthentication', store.state.verifiedAuthentication)
     if (! store.state.verifiedAuthentication) {
       await store.dispatch('verifyAuthentication')
     }
@@ -105,6 +114,8 @@ router.beforeEach(async (to, from, next) => {
   return next()
 })
 
+let idTimer = null
+
 axios.interceptors.response.use(
   (response) => {
     return response;
@@ -112,6 +123,21 @@ axios.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401 && error.config.url !== '/api/user') {
       router.replace('/login')
+    }
+
+    // By simplicity we use the validation of server, but can be validated the form with vuelidate or veevalidate in any component
+    if (error.response?.status === 422 && typeof error.response?.data?.errors === 'object') {
+      const messages = error.response.data.errors
+      store.commit('setErrorMessages', Object.keys(messages).map(k => messages[k][0]))
+
+      if (idTimer !== null) {
+        clearTimeout(idTimer)
+      }
+
+      idTimer = setTimeout(() => {
+        store.commit('setErrorMessages', [])
+        idTimer = null
+      }, 3000)
     }
 
     return Promise.reject(error)
