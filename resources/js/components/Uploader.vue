@@ -15,7 +15,8 @@
     </div>
     <div class="w-32 h-24 border rounded border-gray-300 relative">
       <div class="w-full h-full flex flex-col justify-center items-center absolute top-0 left-0 z-0">
-        <svg class="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+        <loader v-if="noConfirm && uploading" color="green-100"></loader>
+        <svg v-else class="w-12 h-12 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
         <slot name="text"><span class="text-sm text-gray-800">Choose a file</span></slot>
       </div>
       <input type="file"

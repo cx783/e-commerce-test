@@ -70,7 +70,7 @@ export default {
       default: false
     },
     buttonClass: {
-      type: String,
+      type: [String, Array],
       default: ''
     }
   },

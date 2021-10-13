@@ -2,6 +2,7 @@
   <div class="bg-gray-200">
     <client-header></client-header>
     <div v-if="loading" class="p-4 text-center text-gray-500">Loading...</div>
+    <div v-else-if="products.length === 0" class="p-4 text-center text-gray-500">Without recorts to show</div>
     <div v-else
       class="container mx-auto mt-4"
     >
