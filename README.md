@@ -47,6 +47,16 @@ Up the local server
 php artisan serve
 ```
 
+Consider than laravel sanctum is being used, so you will have to configure the port in the .env file, in case of not using laravel's default port
+```sh
+SANCTUM_STATEFUL_DOMAINS=localhost:{MY_CUSTOM_PORT}
+```
+
+This applies also to the APP_URL variable
+```sh
+APP_URL=http://localhost:{MY_CUSTOM_PORT}
+```
+
 Go to http://localhost:8000 in the browser
 
 For admin facing go direct to: http://localhost:8000/login
