@@ -76,7 +76,7 @@
               </div>
             </div>
           </div>
-          <div class="w-96">
+          <div class="w-full md:w-96">
             <div class="pt-4 bg-white">
               <p class="px-4 text-gray-800 text-base font-semibold">Items</p>
               <cart without-checkout-button></cart>

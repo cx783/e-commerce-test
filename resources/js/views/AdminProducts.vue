@@ -1,8 +1,8 @@
 <template>
   <div class="p-4 bg-gray-200">
-    <div class="flex justify-between space-x-2 bg-white p-4 rounded">
+    <div class="flex flex-col md:flex-row justify-between space-y-2 md:space-y-0 md:space-x-2 bg-white p-4 rounded">
       <div class="flex-grow">
-        <form-input id="name" placeholder="Search by name" v-model="productName"></form-input>
+        <form-input id="name" class="w-full md:w-auto" placeholder="Search by name" v-model="productName"></form-input>
         <label class="inline-flex items-center ml-4">
           <input type="checkbox" class="form-checkbox border border-gray-300 rounded" v-model="onlyTrashed">
           <span class="ml-2">Show only trashed products</span>
@@ -80,6 +80,7 @@
                 textCancel="Cancel"
                 color="red"
                 class="w-full md:w-auto"
+                :button-class="['w-full', 'md:w-auto']"
                 @confirmed="deleteProduct(product)"
                 :disabled="deleting.includes(product.id)"
               >

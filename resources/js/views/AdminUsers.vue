@@ -1,9 +1,9 @@
 <template>
   <div class="p-4 bg-gray-200">
-    <div class="flex justify-between space-x-2 bg-white p-4 rounded">
+    <div class="flex flex-col md:flex-row justify-between space-y-2 md:space-y-0 md:space-x-2 bg-white p-4 rounded">
       <div class="flex-grow">
-        <form-input id="name" placeholder="Search by name" v-model="userName"></form-input>
-        <label class="inline-flex items-center ml-4">
+        <form-input id="name" class="w-full md:w-auto" placeholder="Search by name" v-model="userName"></form-input>
+        <label class="inline-flex items-center md:ml-4">
           <input type="checkbox" class="form-checkbox border border-gray-300 rounded" v-model="onlyTrashed">
           <span class="ml-2">Show only trashed users</span>
         </label>
@@ -28,8 +28,8 @@
       >
         Without records to show
       </div>
-      <div v-else>
-        <div class="font-semibold px-4 py-2 text-gray-700 w-full hidden md:flex">
+      <div v-else class="">
+        <div class="font-semibold py-2 text-gray-700 w-full hidden md:flex">
           <div class="w-full">Full name</div>
           <div class="w-full">Email</div>
           <div class="w-full">Created at</div>
@@ -80,6 +80,7 @@
                 textCancel="Cancel"
                 color="red"
                 class="w-full md:w-auto"
+                :button-class="['w-full', 'md:w-auto']"
                 @confirmed="deleteUser(user)"
                 :disabled="deleting.includes(user.id)"
               >

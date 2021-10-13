@@ -8,7 +8,7 @@
         Loading
       </div>
       <div v-else-if="product">
-        <div class="flex justify-between items-c">
+        <div class="flex flex-col space-y-2 md:space-y-0 md:flex-row  md:justify-between items-c">
           <h2 class="text-2xl">{{ product.name }}</h2>
           <p class="text-2xl text-blue-600 font-semibold">$ {{ product.price }}</p>
         </div>

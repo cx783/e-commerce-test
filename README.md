@@ -27,6 +27,11 @@ php artisan migrate
 php artisan db:seed
 ```
 
+Create symbolic link for images
+```sh
+php artisan storage:link
+```
+
 Install frontend dependecies
 ```
 npm install
